@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Action Test</title>
+<style type="text/css">
+#institutionId {
+	width: 200px;
+	font-size:12px;
+	border:1px solid red;
+	cursor:hand;
+	padding:5px;
+}
+
+#institutionInfo {
+	width: 300px;
+	height: 400px;
+	font-size:12px;
+	border:1px solid blue;
+	padding:5px;
+}
+</style>
+<script type="text/javascript" src="/Training/common/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	jQuery('#institutionId').click(function() {
+		//jQuery('#institutionInfo').load('/Training/action/Institution/getInstitution/');
+
+		jQuery.ajax({
+			data:"institutionId=abcd",
+			dataType: "json",
+			url:"/Training/action/Institution/getInstitutionById",
+			error: function(xhr, status, error) {
+				alert("status = " + xhr.status + ", error = " + error);
+			},
+			success: function(data) {
+				var txt = "이름 : " + data.institutionName + "<br />" +
+						  "주소 : " + data.institutionAddress
+				jQuery('#institutionInfo').html(data);
+			}
+		});
+
+	});
+	jQuery('#institutionId').mousedown(function() {
+		jQuery(this).css('background','#FFDDDD');
+	}).mouseup(function() {
+		jQuery(this).css('background','white');
+	});
+});
+</script>
+</head>
+<body>
+<div id="institutionId">멀티캠퍼스</div>
+<br/>
+<div id="institutionInfo">
+</div>
+</body>
+</html>

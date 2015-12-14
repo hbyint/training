@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.ucube.umis.training.mapper.CourseMapper">
+	
+	<insert id="insertCourse" parameterType="Course">
+		insert into TTR_COURSE 
+			(COURSEID, COURSENAME, COURSETYPEID, COURSETYPENAME, INSTITUTIONID, INSTITUTIONNAME, COURSETERM,
+			 COURSETIME, COURSEINFORMATION, COURSEPRICE, COURSESTARTDATE, COURSEENDDATE)
+		values 
+			(#{courseId}, #{courseName}, #{courseTypeId}, #{courseTypeName}, #{institutionId}, #{institutionName},
+			 #{courseTerm}, #{courseTime}, #{courseInformation}, #{coursePrice}, #{courseStartDate}, #{courseEndDate})
+	</insert>
+	
+	<update id="updateCourse" parameterType="Course">
+  		update TTR_COURSE
+  		set
+  			COURSENAME=#{courseName}, COURSETYPEID=#{courseTypeId}, COURSETYPENAME=#{courseTypeName}, 
+  			INSTITUTIONID=#{institutionId}, INSTITUTIONNAME=#{institutionName}, 
+  			COURSETERM=#{courseTerm}, COURSETIME=#{courseTime}, 
+  			COURSEINFORMATION=#{courseInformation}, COURSEPRICE=#{coursePrice}, 
+  			COURSESTARTDATE=#{courseStartDate}, COURSEENDDATE=#{courseEndDate}
+  	</update>
+  	
+  	<delete id="deleteCourse" parameterType="HashMap">
+  		delete from TTR_COURSE where COURSEID in 
+  		<foreach item="item" index="index" collection="ids"
+			open="(" separator="," close=")">
+				#{item}
+		</foreach>
+  	</delete>
+  	
+  	<select id="getCourseById" parameterType="String" resultType="Course">
+  		select * from TTR_INSTITUTION where COURSEID = #{courseId}
+  	</select>
+  	
+  	<select id="getCourseListBySearchCondition" parameterType="QueryParam" resultType="Course">
+  		select * from TTR_COURSE where ${searchField} = ${searchCondition}
+  	</select>
+  	
+  	<select id="getCourseListAll" resultType="Course">
+		select * from TTR_COURSE ORDER BY INSTITUTIONID	
+  	</select>
+  	
+  	<select id="getCountCourseList" resultType="int">
+  		select count(*) from TTR_COURSE
+  	</select>
+  	
+  	<select id="getCountCourseListForSearch" parameterType="QueryParam" resultType="int">
+  		select count(*) from TTR_COURSE where ${searchField} = ${searchCondition}
+  	</select>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.ucube.umis.training.mapper.CourseTypeMapper">
+	
+	<insert id="insertCourseType" parameterType="CourseType">
+		insert into TTR_COURSETYPE (TYPEID, TYPENAME, TYPEORDER)
+		values (#{typeId}, #{typeName}, #{typeOrder})
+	</insert>
+	
+	<insert id="updateCourseType" parameterType="CourseType">
+		update TTR_COURSETYPE set TYPENAME=#{typeName}, TYPEORDER=#{typeOrder}
+		where TYPEID=#{typeId}
+	</insert>
+  	
+  	<delete id="deleteCourseType" parameterType="HashMap">
+  		delete from TTR_COURSETYPE where TYPEID in 
+  		<foreach item="item" index="index" collection="ids"
+			open="(" separator="," close=")">
+				#{item}
+		</foreach>
+  	</delete>
+  	
+  	<select id="getCourseTypeAll" resultType="CourseType">
+		select * from TTR_COURSETYPE ORDER BY TYPEORDER	
+  	</select>
+  	
+  	<select id="getCourseTypeList" parameterType="QueryParam" resultType="CourseType">
+  		SELECT NUM, TYPEORDER, TYPEID, TYPENAME
+		FROM ( 
+			 SELECT a.*, rownum num
+           	 FROM (
+				  SELECT * 
+				  FROM TTR_COURSETYPE
+				  ORDER BY ${sortname} ${sortorder}
+           	      ) a
+       		 )
+		WHERE num BETWEEN #{start} AND #{end}
+  	</select>
+  	
+  	<select id="getCountCourseType" resultType="int">
+  		select count(*) from TTR_COURSETYPE
+  	</select>
+</mapper>

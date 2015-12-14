@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.ucube.umis.training.mapper.AidListMapper">
+	
+	<insert id="insertAidList" parameterType="AidList">
+		insert into TTR_AIDLIST
+			(USERID, USERNAME, REQUESTDATE, REQUESTMONEY, REQUESTREASON, REFERENCEID)
+		values
+			(#{userId}, #{userName}, #{requestDate}, #{requestMoney}, #{requestReason}, referenceId)
+	</insert>
+	
+	<update id="updateAidList" parameterType="AidList">
+  		update TTR_AIDLIST 
+  		set APPROVERID = #{approverId}, 
+  		APPROVERNAME = #{approverName}, 
+  		APPROVERDATE = #{approverDate},
+  		PAYMONEY = #{payMoney},
+  		PAYREASON = #{payReason}
+  	</update>
+  	
+  	<delete id="deleteAidList" parameterType="List">
+  		delete from TTR_AIDLIST where userId = #{userId}
+  	</delete>
+  	
+  	<select id="getInstitutionById" parameterType="String" resultType="Institution">
+  		select * from TTR_INSTITUTION where INSTITUTIONID = #{institutionId}
+  	</select>
+  	
+  	<select id="getInstitutionPerPage" parameterType="QueryParam" resultType="Institution">
+
+		SELECT NUM, INSTITUTIONID, INSTITUTIONNAME, INSTITUTIONADDRESS, INSTITUTIONCALL
+		FROM ( 
+			 SELECT a.*, rownum num
+           	 FROM (
+				  SELECT * 
+				  FROM TTR_INSTITUTION
+           	      ) a
+       		 ORDER BY #{sortname} ${sortorder}
+       		 )
+		WHERE rownum BETWEEN #{start} AND #{end}
+		
+  	</select>
+  	
+  	<select id="getInstitutionCount" resultType="INT">
+  		select count(*) from TTR_INSTITUTION
+  	</select>
+
+</mapper>

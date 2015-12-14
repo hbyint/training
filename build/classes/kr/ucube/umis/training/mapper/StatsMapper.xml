@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.ucube.umis.training.mapper.StatsMapper">
+	
+	<insert id="insertInstitution" parameterType="Institution">
+		insert into TTR_INSTITUTION (INSTITUTIONID, INSTITUTIONNAME, INSTITUTIONADDRESS, INSTITUTIONCALL)
+		values (#{institutionId}, #{institutionName}, #{institutionAddress}, #{institutionCall})
+	</insert>
+	
+	<update id="updateInstitution" parameterType="Institution">
+  		update TTR_INSTITUTION 
+  		set INSTITUTIONID = #{institutionId}, 
+  		INSTITUTIONNAME = #{institutionName}, 
+  		INSTITUTIONADDRESS = #{institutionAddress},
+  		INSTITUTIONCALL = #{institutionCall}
+  	</update>
+  	
+  	<delete id="deleteInstitution" parameterType="List">
+  		delete from TTR_INSTITUTION where institutionId = #{institutionId}
+  	</delete>
+  	
+  	<select id="getInstitutionById" parameterType="String" resultType="Institution">
+  		select * from TTR_INSTITUTION where INSTITUTIONID = #{institutionId}
+  	</select>
+  	
+  	<select id="getInstitutionPerPage" parameterType="QueryParam" resultType="Institution">
+
+		SELECT NUM, INSTITUTIONID, INSTITUTIONNAME, INSTITUTIONADDRESS, INSTITUTIONCALL
+		FROM ( 
+			 SELECT a.*, rownum num
+           	 FROM (
+				  SELECT * 
+				  FROM TTR_INSTITUTION
+           	      ) a
+       		 ORDER BY #{sortname} ${sortorder}
+       		 )
+		WHERE rownum BETWEEN #{start} AND #{end}
+		
+  	</select>
+  	
+  	<select id="getInstitutionCount" resultType="INT">
+  		select count(*) from TTR_INSTITUTION
+  	</select>
+
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.ucube.umis.training.mapper.InstitutionMapper">
+	
+	<insert id="insertInstitution" parameterType="Institution">
+		insert into TTR_INSTITUTION (INSTITUTIONID, INSTITUTIONNAME, INSTITUTIONADDRESS, INSTITUTIONCALL)
+		values (#{institutionId}, #{institutionName}, #{institutionAddress}, #{institutionCall})
+	</insert>
+	
+	<update id="updateInstitution" parameterType="Institution">
+  		update TTR_INSTITUTION 
+  		set INSTITUTIONID = #{institutionId}, 
+  		INSTITUTIONNAME = #{institutionName}, 
+  		INSTITUTIONADDRESS = #{institutionAddress},
+  		INSTITUTIONCALL = #{institutionCall}
+  	</update>
+  	
+  	<delete id="deleteInstitution" parameterType="HashMap">
+  		delete from TTR_INSTITUTION where institutionId in
+  		<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+				#{item}
+		</foreach>
+  	</delete>
+  	
+  	<select id="getInstitutionById" parameterType="String" resultType="Institution">
+  		select * from TTR_INSTITUTION where INSTITUTIONID = #{institutionId}
+  	</select>
+  	
+  	<select id="getInstitutionList" parameterType="QueryParam" resultType="Institution">
+
+		SELECT NUM, INSTITUTIONID, INSTITUTIONNAME, INSTITUTIONADDRESS, INSTITUTIONCALL
+		FROM ( 
+			 SELECT a.*, rownum num
+           	 FROM (
+				  SELECT * 
+				  FROM TTR_INSTITUTION
+				  ORDER BY ${sortname} ${sortorder}
+           	      ) a
+       		 )
+		WHERE NUM BETWEEN #{start} AND #{end}
+		
+  	</select>
+  	
+  	<select id="getInstitutionAll" resultType="Institution">
+  		select * from TTR_INSTITUTION order by institutionId
+  	</select>
+  	
+  	<select id="getInstitutionCount" resultType="INT">
+  		select count(*) from TTR_INSTITUTION
+  	</select>
+
+</mapper>
